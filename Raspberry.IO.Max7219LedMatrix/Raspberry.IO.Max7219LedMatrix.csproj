@@ -11,7 +11,7 @@
 		<PackageTags>MAX7219 Raspberry PI</PackageTags>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<Version>1.0.3</Version>
+		<Version>1.0.4</Version>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Unosquare.Raspberry.IO" Version="0.27.1" />

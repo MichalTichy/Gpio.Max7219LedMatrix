@@ -17,7 +17,7 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
 
 
         protected readonly ISpiChannel _channel;
-        private IMax7219MatrixModule[][] _modules;
+        public IMax7219MatrixModule[][] Modules { get; protected set; }
         private IMax7219MatrixModule[] _orderedModules;
         private IMatrixCharactersLibrary _matrixCharactersLibrary;
 
@@ -33,7 +33,7 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
         public Max7219MatrixDisplay(ISpiChannel channel, IMax7219MatrixModule[][] modules)
         {
             _channel = channel;
-            _modules = modules;
+            Modules = modules;
             InitOrderedModules();
             _matrixCharactersLibrary = new MatrixCharactersLibrary();
         }
@@ -139,7 +139,7 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
         {
             byte[] topOverFlow;
 
-            foreach (var row in _modules.Reverse())
+            foreach (var row in Modules.Reverse())
             {
                 topOverFlow = new byte[row.Length];
                 for (var i = 0; i < row.Length; i++)
@@ -160,7 +160,7 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
         {
             byte[] bottomOverFlow;
 
-            foreach (var row in _modules)
+            foreach (var row in Modules)
             {
                 bottomOverFlow = new byte[row.Length];
                 for (var i = 0; i < row.Length; i++)
@@ -180,7 +180,7 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
         {
             byte rightOverflow = 0x0;
 
-            foreach (var row in _modules)
+            foreach (var row in Modules)
             {
                 for (var i = 0; i < row.Length; i++)
                 {
@@ -199,7 +199,7 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
         {
             byte rightOverflow = 0x0;
 
-            foreach (var row in _modules)
+            foreach (var row in Modules)
             {
                 for (var i = 0; i < row.Length; i++)
                 {
@@ -261,7 +261,7 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
             CheckTextLength(text, row);
             for (int i = 0; i < text.Length; i++)
             {
-                SetCharacter(_modules[row][i], text[i]);
+                SetCharacter(Modules[row][i], text[i]);
             }
 
             return this;
@@ -274,23 +274,23 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
 
         private void InitModules(int numberOfModules)
         {
-            _modules = new IMax7219MatrixModule[1][];
-            _modules[0] = new IMax7219MatrixModule[numberOfModules];
+            Modules = new IMax7219MatrixModule[1][];
+            Modules[0] = new IMax7219MatrixModule[numberOfModules];
             for (int i = 0; i < numberOfModules; i++)
             {
-                _modules[0][i] = new Max7219MatrixModule(i);
+                Modules[0][i] = new Max7219MatrixModule(i);
             }
         }
 
         private void InitOrderedModules()
         {
-            if (_modules == null)
+            if (Modules == null)
             {
                 return;
             }
 
             var d = new Dictionary<int, IMax7219MatrixModule>();
-            foreach (var module in _modules.SelectMany(t => t))
+            foreach (var module in Modules.SelectMany(t => t))
             {
                 if (d.ContainsKey(module.ModuleNumber))
                 {
@@ -307,7 +307,7 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
         private void CheckTextLength(string text, int row)
         {
             CheckRow(row);
-            var rowArray = _modules[row];
+            var rowArray = Modules[row];
             if (rowArray.Length < text.Length)
             {
                 throw new ArgumentException(
@@ -317,9 +317,9 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
 
         private void CheckRow(int row)
         {
-            if (row < 0 || row >= _modules.Length)
+            if (row < 0 || row >= Modules.Length)
             {
-                throw new ArgumentException($"Row must be in range 0 - {_modules.Length - 1}.", nameof(row));
+                throw new ArgumentException($"Row must be in range 0 - {Modules.Length - 1}.", nameof(row));
             }
         }
     }
