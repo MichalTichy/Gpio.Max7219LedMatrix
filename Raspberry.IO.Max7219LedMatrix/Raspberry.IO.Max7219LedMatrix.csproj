@@ -10,6 +10,7 @@
 		<RepositoryType>Git</RepositoryType>
 		<PackageTags>MAX7219 Raspberry PI</PackageTags>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Unosquare.Raspberry.IO" Version="0.27.1" />
