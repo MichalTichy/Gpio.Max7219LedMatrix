@@ -275,6 +275,7 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
         private void InitModules(int numberOfModules)
         {
             _modules = new IMax7219MatrixModule[1][];
+            _modules[0] = new IMax7219MatrixModule[numberOfModules];
             for (int i = 0; i < numberOfModules; i++)
             {
                 _modules[0][i] = new Max7219MatrixModule(i);
