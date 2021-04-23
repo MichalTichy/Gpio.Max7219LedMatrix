@@ -317,7 +317,7 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
 
         private void CheckRow(int row)
         {
-            if (row < 0 || _modules.Length >= row)
+            if (row < 0 || row >= _modules.Length)
             {
                 throw new ArgumentException($"Row must be in range 0 - {_modules.Length - 1}.", nameof(row));
             }
