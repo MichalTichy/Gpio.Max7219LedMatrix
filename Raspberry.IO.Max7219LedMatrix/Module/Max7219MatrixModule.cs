@@ -50,7 +50,7 @@ namespace Raspberry.IO.Max7219LedMatrix.Module
 
         public virtual Max7219MatrixModule ApplyPreprocessing()
         {
-            _preprocessData(this);
+            _preprocessData?.Invoke(this);
             return this;
         }
 
