@@ -9,6 +9,8 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
 {
     public class Max7219MatrixDisplay : IMax7219MatrixDisplay
     {
+        public IMax7219MatrixModule[][] Modules { get; protected set; }
+
         protected const byte ShutdownByte = 0x0C;
         protected const byte BrightnessByte = 0x0a;
         protected const byte TestModeByte = 0x0f;
@@ -16,13 +18,12 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
         protected const byte ScanLimitByte = 0x0b;
 
 
-        protected readonly ISpiChannel _channel;
-        public IMax7219MatrixModule[][] Modules { get; protected set; }
-        private IMax7219MatrixModule[] _orderedModules;
+        protected readonly ISpiChannel Channel;
+        protected IMax7219MatrixModule[] OrderedModules;
 
         public Max7219MatrixDisplay(ISpiChannel channel, int numberOfModules)
         {
-            _channel = channel;
+            Channel = channel;
             InitModules(numberOfModules);
             InitOrderedModules();
         }
@@ -30,7 +31,7 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
 
         public Max7219MatrixDisplay(ISpiChannel channel, IMax7219MatrixModule[][] modules)
         {
-            _channel = channel;
+            Channel = channel;
             Modules = modules;
             InitOrderedModules();
         }
@@ -60,9 +61,9 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
                 
                 var data = new List<byte>();
 
-                for (var m = _orderedModules.Length - 1; m >= 0; m--)
+                for (var m = OrderedModules.Length - 1; m >= 0; m--)
                 {
-                    var module = _orderedModules[m];
+                    var module = OrderedModules[m];
                     data.Add((byte)(r + 1));
                     data.Add(module.GetRow(r));
                 }
@@ -75,14 +76,14 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
 
         public virtual IMax7219MatrixDisplay SendRaw(byte[] data)
         {
-            _channel.Write(data);
+            Channel.Write(data);
             return this;
         }
 
         public virtual IMax7219MatrixDisplay SetBrightness(byte brightness)
         {
-            var brightnesses = new byte[_orderedModules.Length];
-            for (int i = 0; i < _orderedModules.Length; i++)
+            var brightnesses = new byte[OrderedModules.Length];
+            for (int i = 0; i < OrderedModules.Length; i++)
             {
                 brightnesses[i] = brightness;
             }
@@ -92,7 +93,7 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
 
         public virtual IMax7219MatrixDisplay SetBrightness(byte[] brightnesses)
         {
-            if (brightnesses.Length > _orderedModules.Length)
+            if (brightnesses.Length > OrderedModules.Length)
             {
                 throw new ArgumentException("Cannot set brightness to more modules than configured!",
                     nameof(brightnesses));
@@ -132,7 +133,7 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
 
         public virtual IMax7219MatrixDisplay ApplyToAllModules(Action<IMax7219MatrixModule> action)
         {
-            foreach (var module in _orderedModules)
+            foreach (var module in OrderedModules)
             {
                 action(module);
             }
@@ -298,7 +299,7 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
                 d[module.ModuleNumber] = module;
             }
 
-            _orderedModules = d.Values.OrderBy(t => t.ModuleNumber).ToArray();
+            OrderedModules = d.Values.OrderByDescending(t => t.ModuleNumber).ToArray();
         }
 
         private void CheckTextLength(string text, int row)
