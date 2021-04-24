@@ -24,8 +24,6 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
         IMax7219MatrixDisplay ClearDisplay();
         IMax7219MatrixDisplay CopyModule(IMax7219MatrixModule source, IMax7219MatrixModule target);
         IMax7219MatrixDisplay FillDisplay();
-        IMax7219MatrixDisplay SetNumber(IMax7219MatrixModule module, int number);
-        IMax7219MatrixDisplay SetCharacter(IMax7219MatrixModule module, char character);
         IMax7219MatrixDisplay Identify();
         IMax7219MatrixDisplay SetText(string text, int row = 0);
         IMax7219MatrixDisplay SetNumber(int number, int row = 0);

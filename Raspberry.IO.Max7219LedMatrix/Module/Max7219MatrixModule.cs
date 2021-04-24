@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Raspberry.IO.Max7219LedMatrix.CharactersLibrary;
 
 namespace Raspberry.IO.Max7219LedMatrix.Module
 {
@@ -9,6 +10,7 @@ namespace Raspberry.IO.Max7219LedMatrix.Module
         private readonly Action<IMax7219MatrixModule> _preprocessData;
 
         protected byte[] Data = new byte[NumberOfRows];
+        protected IMatrixCharactersLibrary MatrixCharactersLibrary=new MatrixCharactersLibrary();
 
 
         /// <summary>
@@ -52,6 +54,10 @@ namespace Raspberry.IO.Max7219LedMatrix.Module
         {
             _preprocessData?.Invoke(this);
             return this;
+        }
+        public void SetCharacterLibrary(IMatrixCharactersLibrary charactersLibrary)
+        {
+            MatrixCharactersLibrary = charactersLibrary;
         }
 
         public virtual IMax7219MatrixModule ShiftModuleRight(uint columnCount)
@@ -142,6 +148,21 @@ namespace Raspberry.IO.Max7219LedMatrix.Module
             }
 
             data.CopyTo(Data, 0);
+        }
+
+        public virtual IMax7219MatrixModule SetNumber(int number)
+        {
+            if (number < 0 || number > 9)
+                throw new ArgumentException("Number is out of valid range of 0-9!", nameof(number));
+
+            SetCharacter(number.ToString()[0]);
+            return this;
+        }
+
+        public virtual IMax7219MatrixModule SetCharacter(char character)
+        {
+            Set(MatrixCharactersLibrary.GetCharacter(character));
+            return this;
         }
 
         public virtual byte[] Get()

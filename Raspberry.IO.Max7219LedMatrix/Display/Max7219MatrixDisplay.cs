@@ -19,14 +19,12 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
         protected readonly ISpiChannel _channel;
         public IMax7219MatrixModule[][] Modules { get; protected set; }
         private IMax7219MatrixModule[] _orderedModules;
-        private IMatrixCharactersLibrary _matrixCharactersLibrary;
 
         public Max7219MatrixDisplay(ISpiChannel channel, int numberOfModules)
         {
             _channel = channel;
             InitModules(numberOfModules);
             InitOrderedModules();
-            _matrixCharactersLibrary = new MatrixCharactersLibrary();
         }
 
 
@@ -35,12 +33,11 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
             _channel = channel;
             Modules = modules;
             InitOrderedModules();
-            _matrixCharactersLibrary = new MatrixCharactersLibrary();
         }
 
         public void SetCharacterLibrary(IMatrixCharactersLibrary charactersLibrary)
         {
-            _matrixCharactersLibrary = charactersLibrary;
+            ApplyToAllModules(module => module.SetCharacterLibrary(charactersLibrary));
         }
 
 
@@ -53,10 +50,20 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
 
         public virtual IMax7219MatrixDisplay UpdateScreen()
         {
-            foreach (var module in _orderedModules)
+
+            for (uint r = 0; r < Max7219MatrixModule.NumberOfRows; r++)
             {
-                module.ApplyPreprocessing();
-                SendRaw(module.Get());
+                
+                var data = new List<byte>();
+
+                for (var m = _orderedModules.Length - 1; m >= 0; m--)
+                {
+                    var module = _orderedModules[m];
+                    data.Add((byte)(r + 1));
+                    data.Add(module.GetRow(r));
+                }
+
+                SendRaw(data.ToArray());
             }
 
             return this;
@@ -235,24 +242,10 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
         }
 
 
-        public virtual IMax7219MatrixDisplay SetNumber(IMax7219MatrixModule module, int number)
-        {
-            if (number < 0 || number > 9)
-                throw new ArgumentException("Number is out of valid range of 0-9!", nameof(number));
-
-            SetCharacter(module, number.ToString()[0]);
-            return this;
-        }
-
-        public virtual IMax7219MatrixDisplay SetCharacter(IMax7219MatrixModule module, char character)
-        {
-            module.Set(_matrixCharactersLibrary.GetCharacter(character));
-            return this;
-        }
 
         public virtual IMax7219MatrixDisplay Identify()
         {
-            ApplyToAllModules(module => SetNumber(module, module.ModuleNumber));
+            ApplyToAllModules(module => SetNumber(module.ModuleNumber));
             return this;
         }
 
@@ -261,7 +254,7 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
             CheckTextLength(text, row);
             for (int i = 0; i < text.Length; i++)
             {
-                SetCharacter(Modules[row][i], text[i]);
+                Modules[row][i].SetCharacter(text[i]);
             }
 
             return this;
