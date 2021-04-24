@@ -112,13 +112,21 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
 
         public virtual IMax7219MatrixDisplay TurnOff()
         {
-            SendRaw(new byte[] {ShutdownByte, 0x00});
+            for (int i = 0; i < Modules.SelectMany(t => t).Count(); i++)
+            {
+                SendRaw(new byte[] { ShutdownByte, 0x00 });
+            }
+
             return this;
         }
 
         public virtual IMax7219MatrixDisplay TurnOn()
         {
-            SendRaw(new byte[] {ShutdownByte, 0x01});
+
+            for (int i = 0; i < Modules.SelectMany(t => t).Count(); i++)
+            {
+                SendRaw(new byte[] { ShutdownByte, 0x01 });
+            }
             return this;
         }
 
