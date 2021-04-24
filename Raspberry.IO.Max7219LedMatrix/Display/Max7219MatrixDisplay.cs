@@ -45,6 +45,10 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
         {
             SendRaw(new byte[] {DecodeModeByte, 0x00});
             SendRaw(new byte[] {ScanLimitByte, 0x0f});
+            
+            ClearDisplay();
+            UpdateScreen();
+
             return this;
         }
 
