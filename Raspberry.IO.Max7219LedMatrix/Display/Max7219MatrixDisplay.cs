@@ -12,10 +12,10 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
         public IMax7219MatrixModule[][] Modules { get; protected set; }
 
         protected const byte ShutdownByte = 0x0C;
-        protected const byte BrightnessByte = 0x0a;
-        protected const byte TestModeByte = 0x0f;
+        protected const byte BrightnessByte = 0x0A;
+        protected const byte TestModeByte = 0x0F;
         protected const byte DecodeModeByte = 0x09;
-        protected const byte ScanLimitByte = 0x0b;
+        protected const byte ScanLimitByte = 0x0B;
 
 
         protected readonly ISpiChannel Channel;
@@ -44,13 +44,14 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
 
         public virtual IMax7219MatrixDisplay Init()
         {
-            SendRaw(new byte[] {DecodeModeByte, 0x00});
-            SendRaw(new byte[] {ScanLimitByte, 0x0f});
-            
+            SendRaw(new byte[2] { DecodeModeByte, 0x00 }); // set decode mode
+            SendRaw(new byte[2] { ScanLimitByte, 0x0F });
+            TurnOn();
+            TestMode(false);
             ClearDisplay();
             UpdateScreen();
-
             return this;
+
         }
 
         public virtual IMax7219MatrixDisplay UpdateScreen()
@@ -112,10 +113,8 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
 
         public virtual IMax7219MatrixDisplay TurnOff()
         {
-            for (int i = 0; i < Modules.SelectMany(t => t).Count(); i++)
-            {
-                SendRaw(new byte[] { ShutdownByte, 0x00 });
-            }
+
+            ApplyToAllModules(module => SendRaw(new byte[2] { ShutdownByte, 0x00 }));
 
             return this;
         }
@@ -123,19 +122,16 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
         public virtual IMax7219MatrixDisplay TurnOn()
         {
 
-            for (int i = 0; i < Modules.SelectMany(t => t).Count(); i++)
-            {
-                SendRaw(new byte[] { ShutdownByte, 0x01 });
-            }
+            ApplyToAllModules(module => SendRaw(new byte[2] { ShutdownByte, 0x01 }));
             return this;
         }
 
         public virtual IMax7219MatrixDisplay TestMode(bool enabled = true)
         {
-            byte enabledByte = 0x00;
-            byte disabledByte = 0x01;
+            byte enabledByte = 0x01;
+            byte disabledByte = 0x00;
             byte enable = enabled ? enabledByte : disabledByte;
-            SendRaw(new byte[] {TestModeByte, enable});
+            SendRaw(new byte[] { TestModeByte, enable });
             return this;
         }
 
