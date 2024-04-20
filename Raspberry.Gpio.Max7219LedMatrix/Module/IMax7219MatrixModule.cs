@@ -22,14 +22,14 @@ namespace Raspberry.Gpio.Max7219LedMatrix.Module
         IMax7219MatrixModule SetRow(uint rowId, byte value);
         byte GetRow(uint rowId);
         IMax7219MatrixModule Fill();
-        void Set(byte[] data);
+        IMax7219MatrixModule Set(byte[] data);
         IMax7219MatrixModule SetNumber(int number);
         IMax7219MatrixModule SetCharacter(char character);
         byte[] Get();
         IMax7219MatrixModule ClearModule();
         uint GetRowCount();
         uint GetColumnCount();
-        void SetColumn(uint column, byte data);
+        IMax7219MatrixModule SetColumn(uint column, byte data);
         byte GetColumn(uint column);
     }
 }

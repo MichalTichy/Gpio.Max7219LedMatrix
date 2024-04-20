@@ -148,7 +148,7 @@ namespace Raspberry.Gpio.Max7219LedMatrix.Module
         }
 
 
-        public virtual void Set(byte[] data)
+        public virtual IMax7219MatrixModule Set(byte[] data)
         {
             if (Data.Length != data.Length)
             {
@@ -156,6 +156,7 @@ namespace Raspberry.Gpio.Max7219LedMatrix.Module
             }
 
             data.CopyTo(Data, 0);
+            return this;
         }
 
         public virtual IMax7219MatrixModule SetNumber(int number)
@@ -198,7 +199,7 @@ namespace Raspberry.Gpio.Max7219LedMatrix.Module
             return GetRowCount();
         }
 
-        public void SetColumn(uint column, byte data)
+        public IMax7219MatrixModule SetColumn(uint column, byte data)
         {
             CheckColumn(column);
 
@@ -212,6 +213,7 @@ namespace Raspberry.Gpio.Max7219LedMatrix.Module
             }
 
             Data = moduleData;
+            return this;
         }
 
         public byte GetColumn(uint column)
