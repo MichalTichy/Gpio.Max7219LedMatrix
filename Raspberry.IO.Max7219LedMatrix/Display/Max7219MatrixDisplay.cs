@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Device.Spi;
 using System.Linq;
+using System.Threading;
+using System.Threading.Channels;
+using System.Threading.Tasks;
 using Raspberry.IO.Max7219LedMatrix.CharactersLibrary;
 using Raspberry.IO.Max7219LedMatrix.Module;
-using Unosquare.RaspberryIO.Abstractions;
 
 namespace Raspberry.IO.Max7219LedMatrix.Display
 {
@@ -18,20 +21,20 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
         protected const byte ScanLimitByte = 0x0B;
 
 
-        protected readonly ISpiChannel Channel;
+        private readonly SpiDevice device;
         protected IMax7219MatrixModule[] OrderedModules;
 
-        public Max7219MatrixDisplay(ISpiChannel channel, int numberOfModules)
+        public Max7219MatrixDisplay(SpiDevice device, int numberOfModules)
         {
-            Channel = channel;
+            this.device = device;
             InitModules(numberOfModules);
             InitOrderedModules();
         }
 
 
-        public Max7219MatrixDisplay(ISpiChannel channel, IMax7219MatrixModule[][] modules)
+        public Max7219MatrixDisplay(SpiDevice device, Max7219MatrixModule[][] modules)
         {
-            Channel = channel;
+            this.device = device;
             Modules = modules;
             InitOrderedModules();
         }
@@ -45,7 +48,7 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
         public virtual IMax7219MatrixDisplay Init()
         {
             SendRaw(new byte[2] { DecodeModeByte, 0x00 }); // set decode mode
-            SendRaw(new byte[2] { ScanLimitByte, 0x0F });
+            SendRaw(new byte[2] { ScanLimitByte, 0x07 });
             TurnOn();
             TestMode(false);
             ClearDisplay();
@@ -77,7 +80,7 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
 
         public virtual IMax7219MatrixDisplay SendRaw(byte[] data)
         {
-            Channel.Write(data);
+            device.Write(data);
             return this;
         }
 
@@ -322,6 +325,55 @@ namespace Raspberry.IO.Max7219LedMatrix.Display
             if (row < 0 || row >= Modules.Length)
             {
                 throw new ArgumentException($"Row must be in range 0 - {Modules.Length - 1}.", nameof(row));
+            }
+        }
+
+        public async Task RunScrollingText(string text, int columnsPerSecond, bool loop = false, int row = 0, CancellationToken cancellationToken = default)
+        {
+            var isFirst = true;
+            do
+            {
+                string modifiedText;
+                if (isFirst)
+                {
+                    modifiedText = text;
+                    isFirst = false;
+                }
+                else
+                {
+                    modifiedText = text.Trim().PadLeft(text.Length + OrderedModules.Length, ' ');
+                }
+
+                await PerformTextScroll(modifiedText, row, columnsPerSecond, cancellationToken);
+            } while (loop && !cancellationToken.IsCancellationRequested);
+        }
+
+        private async Task PerformTextScroll(string text, int row, int columnsPerSecond, CancellationToken cancellationToken)
+        {
+            var textLength = text.Length;
+
+            var columnCount = OrderedModules.First().GetColumnCount();
+
+            var modifiedText = new string(text.Reverse().ToArray());
+            var virtualDisplay = new Max7219MatrixDisplay(device, textLength);
+            virtualDisplay.SetText(modifiedText);
+
+            var delay = 1000 / columnsPerSecond;
+            var i = 0;
+            while (i++ < textLength * columnCount && !cancellationToken.IsCancellationRequested)
+            {
+                for (var index = 0; index < Modules[row].Length; index++)
+                {
+                    var target = Modules[row][index];
+                    var source = virtualDisplay.OrderedModules[index];
+                    virtualDisplay.CopyModule(source, target);
+                }
+
+                UpdateScreen();
+
+                virtualDisplay.ShiftScreenLeft();
+
+                await Task.Delay(delay, cancellationToken);
             }
         }
     }

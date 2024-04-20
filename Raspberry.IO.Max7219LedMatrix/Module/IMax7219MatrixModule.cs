@@ -11,7 +11,6 @@ namespace Raspberry.IO.Max7219LedMatrix.Module
         /// </summary>
         int ModuleNumber { get; }
 
-        Max7219MatrixModule ApplyPreprocessing();
         void SetCharacterLibrary(IMatrixCharactersLibrary charactersLibrary);
         IMax7219MatrixModule ShiftModuleRight(uint columnCount);
         IMax7219MatrixModule ShiftModuleLeft(uint columnCount);

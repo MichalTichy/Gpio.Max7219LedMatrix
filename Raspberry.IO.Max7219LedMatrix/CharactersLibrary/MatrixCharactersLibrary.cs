@@ -5,7 +5,7 @@ namespace Raspberry.IO.Max7219LedMatrix.CharactersLibrary
 {
     public class MatrixCharactersLibrary : IMatrixCharactersLibrary
     {
-        public readonly Dictionary<char, byte[]> Characters = new Dictionary<char, byte[]>()
+        public readonly Dictionary<char, byte[]> Characters = new()
         {
             {
                 'A',
@@ -481,6 +481,13 @@ namespace Raspberry.IO.Max7219LedMatrix.CharactersLibrary
                 new byte[]
                 {
                     0b01111000, 0b11001100, 0b00001100, 0b00011000, 0b00110000, 0b00000000, 0b00110000, 0b00000000
+                }
+            },
+            {
+                ' ',
+                new byte[]
+                {
+                    0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000
                 }
             }
         };

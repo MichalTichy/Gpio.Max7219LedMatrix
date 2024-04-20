@@ -11,16 +11,15 @@
 		<PackageTags>MAX7219 Raspberry PI</PackageTags>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<Version>1.0.9</Version>
+		<Version>1.1.0</Version>
 	</PropertyGroup>
-	<ItemGroup>
-		<PackageReference Include="Unosquare.Raspberry.IO" Version="0.27.1" />
-		<PackageReference Include="Unosquare.WiringPi" Version="0.5.1" />
-	</ItemGroup>
 	<ItemGroup>
 	  <None Include="logo.png">
 	    <Pack>True</Pack>
 	    <PackagePath></PackagePath>
 	  </None>
+	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="System.Device.Gpio" Version="3.1.0" />
 	</ItemGroup>
 </Project>

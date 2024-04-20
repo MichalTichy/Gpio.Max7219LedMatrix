@@ -6,8 +6,8 @@ namespace Raspberry.IO.Max7219LedMatrix.Module
 {
     public class Max7219MatrixModule : IMax7219MatrixModule
     {
+        private readonly Func<byte[], byte[]> preprocessData;
         public const int NumberOfRows = 8;
-        private readonly Action<IMax7219MatrixModule> _preprocessData;
 
         protected byte[] Data = new byte[NumberOfRows];
         protected IMatrixCharactersLibrary MatrixCharactersLibrary=new MatrixCharactersLibrary();
@@ -30,31 +30,26 @@ namespace Raspberry.IO.Max7219LedMatrix.Module
         /// </param>
         public Max7219MatrixModule(int moduleNumber)
         {
+            preprocessData = bytes => bytes;
             ModuleNumber = moduleNumber;
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="moduleNumber">
-        /// Module number represents in which order are modules connected.
-        /// Lowest module number marks first connected module and the highest marks the last.
-        /// Display cannot contain duplicate module numbers.
+        ///     Module number represents in which order are modules connected.
+        ///     Lowest module number marks first connected module and the highest marks the last.
+        ///     Display cannot contain duplicate module numbers.
         /// </param>
         /// <param name="preprocessData">
-        /// Action which will be applied to module before updating display.
+        ///     Action applied before data is returned.
         /// </param>
-        public Max7219MatrixModule(int moduleNumber, Action<IMax7219MatrixModule> preprocessData)
+        public Max7219MatrixModule(int moduleNumber, Func<byte[], byte[]> preprocessData)
         {
-            _preprocessData = preprocessData;
+            this.preprocessData = preprocessData ?? (bytes => bytes);
             ModuleNumber = moduleNumber;
         }
 
-        public virtual Max7219MatrixModule ApplyPreprocessing()
-        {
-            _preprocessData?.Invoke(this);
-            return this;
-        }
         public void SetCharacterLibrary(IMatrixCharactersLibrary charactersLibrary)
         {
             MatrixCharactersLibrary = charactersLibrary;
@@ -93,18 +88,30 @@ namespace Raspberry.IO.Max7219LedMatrix.Module
 
         public virtual IMax7219MatrixModule FlipModuleVertical()
         {
-            for (var i = 0; i < Data.Length; i++)
-            {
-                var b = Data[i];
-                Data[i] = ReverseBits(b);
-            }
+            Data = FlipDataVertical(Data);
 
             return this;
         }
 
+        public static byte[] FlipDataHorizontal(byte[] bytes)
+        {
+            return bytes.Reverse().ToArray();
+        }
+
+        public static byte[] FlipDataVertical(byte[] bytes)
+        {
+            for (var i = 0; i < bytes.Length; i++)
+            {
+                var b = bytes[i];
+                bytes[i] = ReverseBits(b);
+            }
+
+            return bytes;
+        }
+
         public virtual IMax7219MatrixModule FlipModuleHorizontal()
         {
-            Data = Data.Reverse().ToArray();
+            Data = FlipDataHorizontal(Data);
             return this;
         }
 
@@ -128,8 +135,9 @@ namespace Raspberry.IO.Max7219LedMatrix.Module
 
         public virtual byte GetRow(uint rowId)
         {
+            var data = Get();
             CheckRowId(rowId);
-            return Data[rowId];
+            return data[rowId];
         }
 
 
@@ -169,7 +177,8 @@ namespace Raspberry.IO.Max7219LedMatrix.Module
         {
             var data = new byte[NumberOfRows];
             Data.CopyTo(data, 0);
-            return data;
+
+            return preprocessData(data);
         }
 
 
