@@ -6,7 +6,7 @@
 		<Product />
 		<Description>Max7219 LED matrix display driver for raspberry PI.</Description>
 		<PackageIcon>logo.png</PackageIcon>
-		<RepositoryUrl>https://github.com/MichalTichy/Raspberry.IO.Max7219LedMatrix</RepositoryUrl>
+		<RepositoryUrl>https://github.com/MichalTichy/Gpio.Max7219LedMatrix</RepositoryUrl>
 		<RepositoryType>Git</RepositoryType>
 		<PackageTags>MAX7219 Raspberry PI</PackageTags>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>

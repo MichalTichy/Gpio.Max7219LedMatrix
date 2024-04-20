@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Raspberry.IO.Max7219LedMatrix\Raspberry.IO.Max7219LedMatrix.csproj" />
+    <ProjectReference Include="..\Gpio.Max7219LedMatrix\Gpio.Max7219LedMatrix.csproj" />
   </ItemGroup>
 
 </Project>

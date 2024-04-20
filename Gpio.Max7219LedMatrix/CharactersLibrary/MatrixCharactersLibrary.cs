@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
-namespace Raspberry.IO.Max7219LedMatrix.CharactersLibrary
+namespace Gpio.Max7219LedMatrix.CharactersLibrary
 {
     public class MatrixCharactersLibrary : IMatrixCharactersLibrary
     {

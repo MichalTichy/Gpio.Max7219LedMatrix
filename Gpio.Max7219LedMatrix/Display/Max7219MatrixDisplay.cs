@@ -1,14 +1,14 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Device.Spi;
 using System.Linq;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
-using Raspberry.IO.Max7219LedMatrix.CharactersLibrary;
-using Raspberry.IO.Max7219LedMatrix.Module;
+using Gpio.Max7219LedMatrix.CharactersLibrary;
+using Gpio.Max7219LedMatrix.Module;
 
-namespace Raspberry.IO.Max7219LedMatrix.Display
+namespace Gpio.Max7219LedMatrix.Display
 {
     public class Max7219MatrixDisplay : IMax7219MatrixDisplay
     {

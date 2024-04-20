@@ -1,12 +1,12 @@
-﻿using System;
+using System;
 using System.Device.Spi;
 using System.Linq;
 using System.Threading.Tasks;
-using Raspberry.IO.Max7219LedMatrix.CharactersLibrary;
-using Raspberry.IO.Max7219LedMatrix.Display;
-using Raspberry.IO.Max7219LedMatrix.Module;
+using Gpio.Max7219LedMatrix.CharactersLibrary;
+using Gpio.Max7219LedMatrix.Display;
+using Gpio.Max7219LedMatrix.Module;
 
-namespace Raspberry.IO.Max7219LedMatrix.Example
+namespace Gpio.Max7219LedMatrix.Example
 {
     internal class CodingCharacters : IMatrixCharactersLibrary
     {
