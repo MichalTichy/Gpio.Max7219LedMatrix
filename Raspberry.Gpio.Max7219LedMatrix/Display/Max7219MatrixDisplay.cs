@@ -5,10 +5,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
-using Gpio.Max7219LedMatrix.CharactersLibrary;
-using Gpio.Max7219LedMatrix.Module;
+using Raspberry.Gpio.Max7219LedMatrix.CharactersLibrary;
+using Raspberry.Gpio.Max7219LedMatrix.Module;
 
-namespace Gpio.Max7219LedMatrix.Display
+namespace Raspberry.Gpio.Max7219LedMatrix.Display
 {
     public class Max7219MatrixDisplay : IMax7219MatrixDisplay
     {

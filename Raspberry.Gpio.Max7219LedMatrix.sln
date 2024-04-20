@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31005.135
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gpio.Max7219LedMatrix", "Gpio.Max7219LedMatrix\Gpio.Max7219LedMatrix.csproj", "{5470CF68-0473-419F-85E6-2F6FE36C2AC0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Raspberry.Gpio.Max7219LedMatrix", "Raspberry.Gpio.Max7219LedMatrix\Raspberry.Gpio.Max7219LedMatrix.csproj", "{5470CF68-0473-419F-85E6-2F6FE36C2AC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gpio.Max7219LedMatrix.Example", "Gpio.Max7219LedMatrix.Example\Gpio.Max7219LedMatrix.Example.csproj", "{A4072B82-86DF-4A82-82C7-5F612BB014B2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Raspberry.Gpio.Max7219LedMatrix.Example", "Raspberry.Gpio.Max7219LedMatrix.Example\Raspberry.Gpio.Max7219LedMatrix.Example.csproj", "{A4072B82-86DF-4A82-82C7-5F612BB014B2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

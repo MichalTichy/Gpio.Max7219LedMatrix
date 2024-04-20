@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
-using Gpio.Max7219LedMatrix.CharactersLibrary;
+using Raspberry.Gpio.Max7219LedMatrix.CharactersLibrary;
 
-namespace Gpio.Max7219LedMatrix.Module
+namespace Raspberry.Gpio.Max7219LedMatrix.Module
 {
     public class Max7219MatrixModule : IMax7219MatrixModule
     {

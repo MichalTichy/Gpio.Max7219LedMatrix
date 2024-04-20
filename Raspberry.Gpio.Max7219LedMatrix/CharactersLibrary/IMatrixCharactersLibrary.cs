@@ -1,4 +1,4 @@
-namespace Gpio.Max7219LedMatrix.CharactersLibrary
+namespace Raspberry.Gpio.Max7219LedMatrix.CharactersLibrary
 {
     public interface IMatrixCharactersLibrary
     {

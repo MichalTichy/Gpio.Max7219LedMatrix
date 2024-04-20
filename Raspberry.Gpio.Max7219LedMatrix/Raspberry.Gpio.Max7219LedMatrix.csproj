@@ -6,7 +6,7 @@
 		<Product />
 		<Description>Max7219 LED matrix display driver for raspberry PI.</Description>
 		<PackageIcon>logo.png</PackageIcon>
-		<RepositoryUrl>https://github.com/MichalTichy/Gpio.Max7219LedMatrix</RepositoryUrl>
+		<RepositoryUrl>https://github.com/MichalTichy/Raspberry.Gpio.Max7219LedMatrix</RepositoryUrl>
 		<RepositoryType>Git</RepositoryType>
 		<PackageTags>MAX7219 Raspberry PI</PackageTags>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -20,6 +20,6 @@
 	  </None>
 	</ItemGroup>
 	<ItemGroup>
-	  <PackageReference Include="System.Device.Gpio" Version="3.1.0" />
+	  <PackageReference Include="System.Device.Raspberry.Gpio" Version="3.1.0" />
 	</ItemGroup>
 </Project>

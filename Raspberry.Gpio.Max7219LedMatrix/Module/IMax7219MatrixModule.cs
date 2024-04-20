@@ -1,6 +1,6 @@
-using Gpio.Max7219LedMatrix.CharactersLibrary;
+using Raspberry.Gpio.Max7219LedMatrix.CharactersLibrary;
 
-namespace Gpio.Max7219LedMatrix.Module
+namespace Raspberry.Gpio.Max7219LedMatrix.Module
 {
     public interface IMax7219MatrixModule
     {
